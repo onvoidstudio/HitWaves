@@ -10,9 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 322be7169b44ea04e81330b833b7b3fc, type: 3}
-  m_Name: NewCharacterStats
-  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.CharacterStatData
+  m_Name: NewEntityStats
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.EntityStatData
   moveSpeed: 5
   maxHealth: 100
+  healthRegenRate: 0
+  healthRegenDelay: 3
+  healthRegenInterval: 1
   damage: 10
   attackSpeed: 1
+  maxHitCount: 1
+  maxStamina: 100
+  maxMental: 100
+  staminaRegenRate: 10
+  staminaRegenDelay: 1
+  staminaRegenInterval: 0.5
+  strength: 10
+  jumpRange: 0
+  flightDuration: 0

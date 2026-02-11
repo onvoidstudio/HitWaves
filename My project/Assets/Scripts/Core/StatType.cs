@@ -4,8 +4,19 @@ namespace HitWaves.Core
     {
         MoveSpeed,
         MaxHealth,
+        MaxStamina,
+        MaxMental,
         Damage,
         AttackSpeed,
-        Strength
+        Strength,
+        JumpRange,
+        FlightDuration,
+        StaminaRegenRate,
+        StaminaRegenDelay,
+        StaminaRegenInterval,
+        HealthRegenRate,
+        HealthRegenDelay,
+        HealthRegenInterval,
+        MaxHitCount
     }
 }

@@ -8,7 +8,7 @@ namespace HitWaves.Core
     {
         private const string LOG_TAG = "StatHandler";
 
-        [SerializeField] private CharacterStatData baseStats;
+        [SerializeField] private EntityStatData baseStats;
 
         private Dictionary<StatType, float> _statModifiers;
 
@@ -16,11 +16,7 @@ namespace HitWaves.Core
 
         private void Awake()
         {
-            _statModifiers = new Dictionary<StatType, float>();
-            foreach (StatType stat in Enum.GetValues(typeof(StatType)))
-            {
-                _statModifiers[stat] = 0f;
-            }
+            InitializeModifiers();
 
             if (baseStats == null)
             {
@@ -28,8 +24,21 @@ namespace HitWaves.Core
             }
         }
 
+        private void InitializeModifiers()
+        {
+            if (_statModifiers != null) return;
+
+            _statModifiers = new Dictionary<StatType, float>();
+            foreach (StatType stat in Enum.GetValues(typeof(StatType)))
+            {
+                _statModifiers[stat] = 0f;
+            }
+        }
+
         public float GetStat(StatType statType)
         {
+            InitializeModifiers();
+
             if (baseStats == null)
             {
                 DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: baseStats가 null. {statType}에 대해 modifier만 반환.", this);
@@ -65,11 +74,11 @@ namespace HitWaves.Core
             AddModifier(statType, -amount);
         }
 
-        public void SetBaseStats(CharacterStatData newBaseStats)
+        public void SetBaseStats(EntityStatData newBaseStats)
         {
             if (newBaseStats == null)
             {
-                DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: null인 CharacterStatData 설정 시도.", this);
+                DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: null인 EntityStatData 설정 시도.", this);
             }
 
             baseStats = newBaseStats;

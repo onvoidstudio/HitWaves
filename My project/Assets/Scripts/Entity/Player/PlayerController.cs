@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using HitWaves.Core;
 
-namespace HitWaves.Player
+namespace HitWaves.Entity.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(StatHandler))]
