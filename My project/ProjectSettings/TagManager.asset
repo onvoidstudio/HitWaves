@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Entity
   - Enemy
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - Entity
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 

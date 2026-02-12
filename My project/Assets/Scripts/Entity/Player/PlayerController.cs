@@ -1,26 +1,31 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using HitWaves.Core;
+using HitWaves.Core.Attack;
 
 namespace HitWaves.Entity.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(StatHandler))]
+    [RequireComponent(typeof(AttackHandler))]
     public class PlayerController : MonoBehaviour
     {
         private const string LOG_TAG = "PlayerController";
 
         [Header("Input")]
         [SerializeField] private InputActionReference _moveAction;
+        [SerializeField] private InputActionReference _attackAction;
 
         private Rigidbody2D _rigidbody;
         private StatHandler _statHandler;
+        private AttackHandler _attackHandler;
         private Vector2 _moveInput;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _statHandler = GetComponent<StatHandler>();
+            _attackHandler = GetComponent<AttackHandler>();
 
             if (_rigidbody == null)
             {
@@ -45,11 +50,19 @@ namespace HitWaves.Entity.Player
             if (_moveAction != null && _moveAction.action != null)
             {
                 _moveAction.action.Enable();
-                DebugLogger.Log(LOG_TAG, "Move 액션 활성화", this);
             }
             else
             {
                 DebugLogger.LogWarning(LOG_TAG, "Move 액션이 할당되지 않음", this);
+            }
+
+            if (_attackAction != null && _attackAction.action != null)
+            {
+                _attackAction.action.Enable();
+            }
+            else
+            {
+                DebugLogger.LogWarning(LOG_TAG, "Attack 액션이 할당되지 않음", this);
             }
         }
 
@@ -58,13 +71,18 @@ namespace HitWaves.Entity.Player
             if (_moveAction != null && _moveAction.action != null)
             {
                 _moveAction.action.Disable();
-                DebugLogger.Log(LOG_TAG, "Move 액션 비활성화", this);
+            }
+
+            if (_attackAction != null && _attackAction.action != null)
+            {
+                _attackAction.action.Disable();
             }
         }
 
         private void Update()
         {
-            ReadInput();
+            ReadMoveInput();
+            ReadAttackInput();
         }
 
         private void FixedUpdate()
@@ -72,16 +90,23 @@ namespace HitWaves.Entity.Player
             Move();
         }
 
-        private void ReadInput()
+        private void ReadMoveInput()
         {
             if (_moveAction == null || _moveAction.action == null) return;
 
-            Vector2 newInput = _moveAction.action.ReadValue<Vector2>();
+            _moveInput = _moveAction.action.ReadValue<Vector2>();
+        }
 
-            if (newInput != _moveInput)
+        private void ReadAttackInput()
+        {
+            if (_attackAction == null || _attackAction.action == null) return;
+            if (_attackHandler == null) return;
+
+            Vector2 attackInput = _attackAction.action.ReadValue<Vector2>();
+
+            if (attackInput.sqrMagnitude > 0.01f)
             {
-                _moveInput = newInput;
-                DebugLogger.Log(LOG_TAG, $"이동 입력: {_moveInput}", this);
+                _attackHandler.Attack(attackInput.normalized);
             }
         }
 

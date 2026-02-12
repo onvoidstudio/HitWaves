@@ -16,6 +16,7 @@ namespace HitWaves.Core
         public float damage = 10f;
         public float attackSpeed = 1f;
         public float maxHitCount = 1f;
+        public float invincibilityDuration = 1f;
 
         [Header("Resource")]
         public float maxStamina = 100f;
@@ -51,6 +52,7 @@ namespace HitWaves.Core
                 StatType.HealthRegenDelay => healthRegenDelay,
                 StatType.HealthRegenInterval => healthRegenInterval,
                 StatType.MaxHitCount => maxHitCount,
+                StatType.InvincibilityDuration => invincibilityDuration,
                 _ => 0f
             };
         }
