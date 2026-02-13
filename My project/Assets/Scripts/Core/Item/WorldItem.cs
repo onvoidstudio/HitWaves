@@ -11,6 +11,7 @@ namespace HitWaves.Core.Item
         [SerializeField] private LayerMask _pickupLayer;
 
         private SpriteRenderer _spriteRenderer;
+        private bool _isPickedUp;
 
         private void Awake()
         {
@@ -26,25 +27,32 @@ namespace HitWaves.Core.Item
             {
                 _spriteRenderer.sprite = _itemData.Icon;
             }
+
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null && !col.isTrigger)
+            {
+                DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: Collider2D의 isTrigger가 false. OnTriggerEnter2D가 동작하지 않습니다.", this);
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (_isPickedUp) return;
             if (_itemData == null) return;
 
             if (((1 << other.gameObject.layer) & _pickupLayer) == 0) return;
 
-            StatHandler statHandler = other.GetComponent<StatHandler>();
+            StatHandler statHandler = other.GetComponentInParent<StatHandler>();
             if (statHandler == null) return;
 
             if (_itemData.Type == ItemType.Absorb)
             {
+                _isPickedUp = true;
                 ApplyStatModifiers(statHandler);
-                ApplyInstantEffects(other.gameObject);
+                ApplyInstantEffects(statHandler);
+                DebugLogger.Log(LOG_TAG, $"{statHandler.gameObject.name}이(가) '{_itemData.ItemName}' 획득", this);
+                Destroy(gameObject);
             }
-
-            DebugLogger.Log(LOG_TAG, $"{other.gameObject.name}이(가) '{_itemData.ItemName}' 획득", this);
-            Destroy(gameObject);
         }
 
         private void ApplyStatModifiers(StatHandler statHandler)
@@ -55,11 +63,11 @@ namespace HitWaves.Core.Item
             }
         }
 
-        private void ApplyInstantEffects(GameObject target)
+        private void ApplyInstantEffects(StatHandler statHandler)
         {
             if (_itemData.InstantEffects == null || _itemData.InstantEffects.Count == 0) return;
 
-            HealthHandler healthHandler = target.GetComponent<HealthHandler>();
+            HealthHandler healthHandler = statHandler.GetComponent<HealthHandler>();
 
             foreach (InstantEffectEntry entry in _itemData.InstantEffects)
             {
@@ -75,7 +83,7 @@ namespace HitWaves.Core.Item
                     case InstantEffectType.HealFull:
                         if (healthHandler != null)
                         {
-                            float maxHealth = target.GetComponent<StatHandler>().GetStat(StatType.MaxHealth);
+                            float maxHealth = statHandler.GetStat(StatType.MaxHealth);
                             healthHandler.Heal(maxHealth);
                         }
                         break;
