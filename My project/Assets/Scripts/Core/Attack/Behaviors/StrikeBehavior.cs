@@ -17,6 +17,8 @@ namespace HitWaves.Core.Attack.Behaviors
         private Coroutine _swingCoroutine;
         private WaitForSeconds _swingWait;
 
+        public bool CooldownOnExecute => true;
+
         public void Initialize(AttackHandler handler)
         {
             _handler = handler;

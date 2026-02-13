@@ -7,6 +7,8 @@ namespace HitWaves.Core.Attack.Behaviors
         private const string LOG_TAG = "ContactBehavior";
         private const string INTERACTABLE_TAG = "Interactable";
 
+        public bool CooldownOnExecute => false;
+
         public void Initialize(AttackHandler handler)
         {
         }

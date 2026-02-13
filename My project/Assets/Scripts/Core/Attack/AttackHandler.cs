@@ -76,7 +76,7 @@ namespace HitWaves.Core.Attack
 
             int hitCount = _behavior.Execute(this, direction);
 
-            if (hitCount > 0)
+            if (_behavior.CooldownOnExecute)
             {
                 float attackSpeed = _statHandler.GetStat(StatType.AttackSpeed);
                 _cooldownTimer = attackSpeed > 0f ? 1f / attackSpeed : 1f;

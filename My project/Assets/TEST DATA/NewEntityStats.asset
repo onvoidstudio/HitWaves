@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322be7169b44ea04e81330b833b7b3fc, type: 3}
   m_Name: NewEntityStats
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.EntityStatData
-  moveSpeed: 5
+  moveSpeed: 3
   maxHealth: 100
   healthRegenRate: 0
   healthRegenDelay: 3
   healthRegenInterval: 1
-  damage: 10
+  damage: 1
   attackSpeed: 1
   maxHitCount: 1
+  invincibilityDuration: 1
   maxStamina: 100
   maxMental: 100
   staminaRegenRate: 10
