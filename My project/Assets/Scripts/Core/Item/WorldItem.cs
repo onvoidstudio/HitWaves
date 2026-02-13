@@ -57,6 +57,8 @@ namespace HitWaves.Core.Item
 
         private void ApplyStatModifiers(StatHandler statHandler)
         {
+            if (_itemData.StatModifiers == null || _itemData.StatModifiers.Count == 0) return;
+
             foreach (StatModifierEntry entry in _itemData.StatModifiers)
             {
                 statHandler.AddModifier(entry.statType, entry.amount);
