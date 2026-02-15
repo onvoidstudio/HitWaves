@@ -10,11 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5572b55ffafb5a447ac3beb472c85116, type: 3}
-  m_Name: TestAbsorbItem
-  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Item.ItemData
+  m_Name: Test Candy
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Item.ItemMaker
   _itemName: TestCandy
-  _description: "\uCD5C\uB300 \uCCB4\uB825\uC744 1 \uC99D\uAC00\uC2DC\uD0A4\uACE0,
-    \uCCB4\uB825\uC744 \uC644\uC804\uD788 \uD68C\uBCF5\uD55C\uB2E4. "
+  _description: "\uCD5C\uB300\uCCB4\uB8251 \uC99D\uAC00"
   _itemType: 0
-  _icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  _statModifiers: []
+  _icon: {fileID: 21300000, guid: d8b7fe981b1d2654192f5120272663b8, type: 3}
+  _statModifiers:
+  - statType: 1
+    amount: 1
+  _instantEffects: []
+  _slotType: 0
+  _weight: 0
