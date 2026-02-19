@@ -26,6 +26,6 @@ MonoBehaviour:
   staminaRegenRate: 10
   staminaRegenDelay: 1
   staminaRegenInterval: 0.5
-  strength: 10
+  strength: 1
   jumpRange: 0
   flightDuration: 0

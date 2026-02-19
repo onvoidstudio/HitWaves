@@ -38,6 +38,12 @@ sysinfo.txt
 *.opendb
 *.VC.db
 
+# ===== Unity Recovery =====
+_Recovery/
+**/Assets/_Recovery/
+**/Assets/_Recovery.meta
+nul
+
 # ===== OS =====
 .DS_Store
 .DS_Store?
