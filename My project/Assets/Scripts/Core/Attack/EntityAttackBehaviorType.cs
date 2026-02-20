@@ -6,6 +6,7 @@ namespace HitWaves.Core.Attack
         Contact,
         Charge,
         Bite,
-        Projectile
+        Projectile,
+        Sweep
     }
 }

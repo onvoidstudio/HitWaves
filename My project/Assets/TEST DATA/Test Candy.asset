@@ -16,9 +16,14 @@ MonoBehaviour:
   _description: "\uCD5C\uB300\uCCB4\uB8251 \uC99D\uAC00"
   _itemType: 0
   _icon: {fileID: 21300000, guid: d8b7fe981b1d2654192f5120272663b8, type: 3}
+  _positionType: 0
+  _physicsType: 0
+  _isDamageable: 0
   _statModifiers:
   - statType: 1
     amount: 1
   _instantEffects: []
+  _durability: 20
+  _toughness: 5
   _slotType: 0
   _weight: 0

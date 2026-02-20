@@ -1070,7 +1070,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -1083,7 +1083,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,10 +1166,10 @@ RectTransform:
   - {fileID: 1286814596}
   m_Father: {fileID: 1741564199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 500}
+  m_SizeDelta: {x: -704, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &841401626
 MonoBehaviour:
@@ -1475,8 +1475,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1686,9 +1686,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb85db888d585942b98bf8fc128f0f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Attack.AttackHandler
-  _behaviorType: 0
-  _range: 1
-  _swingAngle: 45
+  _behaviorType: 5
+  _range: 2
+  _swingAngle: 50
   _targetLayer:
     serializedVersion: 2
     m_Bits: 73

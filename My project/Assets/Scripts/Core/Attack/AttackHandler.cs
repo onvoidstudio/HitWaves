@@ -102,6 +102,7 @@ namespace HitWaves.Core.Attack
             {
                 EntityAttackBehaviorType.Strike => new Behaviors.StrikeBehavior(),
                 EntityAttackBehaviorType.Contact => new Behaviors.ContactBehavior(),
+                EntityAttackBehaviorType.Sweep => new Behaviors.SweepBehavior(),
                 _ => null
             };
         }

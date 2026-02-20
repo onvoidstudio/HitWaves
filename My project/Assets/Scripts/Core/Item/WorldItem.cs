@@ -51,6 +51,7 @@ namespace HitWaves.Core.Item
             if (_isPickedUp) return;
             if (_itemData == null) return;
             if (((1 << other.gameObject.layer) & _pickupLayer) == 0) return;
+            if (other.GetComponent<StatHandler>() == null) return;
 
             if (!TryPickup(other))
             {
@@ -68,7 +69,7 @@ namespace HitWaves.Core.Item
 
         private bool TryPickup(Collider2D other)
         {
-            StatHandler statHandler = other.GetComponentInParent<StatHandler>();
+            StatHandler statHandler = other.GetComponent<StatHandler>();
             if (statHandler == null) return false;
 
             switch (_itemData.Type)

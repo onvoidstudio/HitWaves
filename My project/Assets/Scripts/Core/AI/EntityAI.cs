@@ -23,6 +23,8 @@ namespace HitWaves.Core.AI
         private EntityAIState _currentState;
         private Vector2 _wanderDirection;
         private float _wanderTimer;
+        private float _knockbackTimer;
+        private float _originalDamping;
 
 #if UNITY_EDITOR
         [Header("Debug (Read Only)")]
@@ -81,6 +83,16 @@ namespace HitWaves.Core.AI
 
         private void FixedUpdate()
         {
+            if (_knockbackTimer > 0f)
+            {
+                _knockbackTimer -= Time.fixedDeltaTime;
+                if (_knockbackTimer <= 0f)
+                {
+                    _rigidbody.linearDamping = _originalDamping;
+                }
+                return;
+            }
+
             switch (_currentState)
             {
                 case EntityAIState.Idle:
@@ -135,6 +147,13 @@ namespace HitWaves.Core.AI
         public EntityAIState GetCurrentState()
         {
             return _currentState;
+        }
+
+        public void ApplyKnockback(float duration)
+        {
+            _originalDamping = _rigidbody.linearDamping;
+            _rigidbody.linearDamping = 5f;
+            _knockbackTimer = duration;
         }
     }
 }

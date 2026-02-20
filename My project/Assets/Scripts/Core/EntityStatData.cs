@@ -17,6 +17,9 @@ namespace HitWaves.Core
         public float attackSpeed = 1f;
         public float maxHitCount = 1f;
         public float invincibilityDuration = 1f;
+        public float sweepDuration = 0.2f;
+        public float knockbackForce = 5f;
+        public float knockbackResistance = 0f;
 
         [Header("Resource")]
         public float maxStamina = 100f;
@@ -53,6 +56,9 @@ namespace HitWaves.Core
                 StatType.HealthRegenInterval => healthRegenInterval,
                 StatType.MaxHitCount => maxHitCount,
                 StatType.InvincibilityDuration => invincibilityDuration,
+                StatType.SweepDuration => sweepDuration,
+                StatType.KnockbackForce => knockbackForce,
+                StatType.KnockbackResistance => knockbackResistance,
                 _ => 0f
             };
         }

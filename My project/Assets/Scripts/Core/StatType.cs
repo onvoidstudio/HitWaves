@@ -18,6 +18,9 @@ namespace HitWaves.Core
         HealthRegenDelay,
         HealthRegenInterval,
         MaxHitCount,
-        InvincibilityDuration
+        InvincibilityDuration,
+        SweepDuration,
+        KnockbackForce,
+        KnockbackResistance
     }
 }
