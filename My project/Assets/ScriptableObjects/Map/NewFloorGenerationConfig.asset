@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54511d57df4e42a49ae37d054ad096f0, type: 3}
+  m_Name: NewFloorGenerationConfig
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Dungeon.FloorGenerationConfig
+  _roomConfigs:
+  - {fileID: 11400000, guid: 2e9121f9a2b8fcc4e91a08663297876b, type: 2}
+  - {fileID: 11400000, guid: 2679598ad00189549a5de1cff2665b58, type: 2}
+  - {fileID: 11400000, guid: b8a9d7f45ba58be47a3eee0eda24c4fa, type: 2}
+  _roomCountSettings:
+  - Label: 2
+    Count: {x: 1, y: 1}
+  - Label: 1
+    Count: {x: 1, y: 1}
+  - Label: 0
+    Count: {x: 5, y: 8}
+  _roomGap: 1
+  _maxPlacementAttempts: 50

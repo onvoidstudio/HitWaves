@@ -8,19 +8,39 @@ namespace HitWaves.Core
     {
         private const string LOG_TAG = "StatHandler";
 
-        [SerializeField] private EntityStatData baseStats;
+        [Header("Base Stats")]
+        [Tooltip("이 엔티티의 기본 스탯 데이터 (ScriptableObject)")]
+        [SerializeField] private EntityStatData _baseStats;
+
+        [Header("진영")]
+        [Tooltip("이 엔티티의 소속 진영 (Player/Enemy/Neutral)")]
+        [SerializeField] private Faction _faction = Faction.Enemy;
 
         private Dictionary<StatType, float> _statModifiers;
+
+        public Faction Faction => _faction;
+
+        public void SetFaction(Faction newFaction)
+        {
+            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: 진영 변경 {_faction} → {newFaction}", this);
+            _faction = newFaction;
+        }
 
         public event Action<StatType, float> OnStatChanged;
 
         private void Awake()
         {
+            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: Awake 시작 — Faction: {_faction}", this);
+
             InitializeModifiers();
 
-            if (baseStats == null)
+            if (_baseStats == null)
             {
                 DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: baseStats가 할당되지 않음. 기본값 0 사용.", this);
+            }
+            else
+            {
+                DebugLogger.Log(LOG_TAG, $"{gameObject.name}: 초기화 완료 — baseStats: {_baseStats.name}", this);
             }
         }
 
@@ -33,29 +53,22 @@ namespace HitWaves.Core
             {
                 _statModifiers[stat] = 0f;
             }
+
+            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: modifier 초기화 완료 — {_statModifiers.Count}개 스탯", this);
         }
 
         public float GetStat(StatType statType)
         {
             InitializeModifiers();
 
-            if (baseStats == null)
-            {
-                DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: baseStats가 null. {statType}에 대해 modifier만 반환.", this);
-            }
-
-            float baseValue = baseStats != null ? baseStats.GetStat(statType) : 0f;
+            float baseValue = _baseStats != null ? _baseStats.GetStat(statType) : 0f;
             float modifier = _statModifiers.TryGetValue(statType, out float mod) ? mod : 0f;
             return baseValue + modifier;
         }
 
         public void AddModifier(StatType statType, float amount)
         {
-            if (_statModifiers == null)
-            {
-                DebugLogger.LogError(LOG_TAG, $"{gameObject.name}: _statModifiers가 초기화되지 않음. Awake 호출 전 접근 시도.", this);
-                return;
-            }
+            InitializeModifiers();
 
             if (!_statModifiers.ContainsKey(statType))
             {
@@ -65,25 +78,19 @@ namespace HitWaves.Core
             _statModifiers[statType] += amount;
 
             DebugLogger.Log(LOG_TAG, $"{gameObject.name}: {statType} modifier +{amount} → 현재 총 {GetStat(statType)}", this);
-
             OnStatChanged?.Invoke(statType, GetStat(statType));
         }
 
         public void RemoveModifier(StatType statType, float amount)
         {
+            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: {statType} modifier -{amount}", this);
             AddModifier(statType, -amount);
         }
 
         public void SetBaseStats(EntityStatData newBaseStats)
         {
-            if (newBaseStats == null)
-            {
-                DebugLogger.LogWarning(LOG_TAG, $"{gameObject.name}: null인 EntityStatData 설정 시도.", this);
-            }
-
-            baseStats = newBaseStats;
-
-            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: baseStats 변경됨 → {(newBaseStats != null ? newBaseStats.name : "null")}", this);
+            DebugLogger.Log(LOG_TAG, $"{gameObject.name}: baseStats 변경 → {(newBaseStats != null ? newBaseStats.name : "null")}", this);
+            _baseStats = newBaseStats;
         }
     }
 }

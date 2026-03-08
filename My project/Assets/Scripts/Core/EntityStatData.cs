@@ -6,34 +6,18 @@ namespace HitWaves.Core
     public class EntityStatData : ScriptableObject
     {
         [Header("Movement")]
+        [Tooltip("초당 이동 속도 (units/s)")]
+        [Min(0f)]
         public float moveSpeed = 5f;
 
         [Header("Combat")]
+        [Tooltip("최대 체력")]
+        [Min(1f)]
         public float maxHealth = 100f;
-        public float healthRegenRate = 0f;
-        public float healthRegenDelay = 3f;
-        public float healthRegenInterval = 1f;
+
+        [Tooltip("기본 공격력")]
+        [Min(0f)]
         public float damage = 10f;
-        public float attackSpeed = 1f;
-        public float maxHitCount = 1f;
-        public float invincibilityDuration = 1f;
-        public float sweepDuration = 0.2f;
-        public float knockbackForce = 5f;
-        public float knockbackResistance = 0f;
-
-        [Header("Resource")]
-        public float maxStamina = 100f;
-        public float maxMental = 100f;
-        public float staminaRegenRate = 10f;
-        public float staminaRegenDelay = 1f;
-        public float staminaRegenInterval = 0.5f;
-
-        [Header("Physical")]
-        public float strength = 10f;
-
-        [Header("Mobility")]
-        public float jumpRange = 0f;
-        public float flightDuration = 0f;
 
         public float GetStat(StatType statType)
         {
@@ -41,24 +25,7 @@ namespace HitWaves.Core
             {
                 StatType.MoveSpeed => moveSpeed,
                 StatType.MaxHealth => maxHealth,
-                StatType.MaxStamina => maxStamina,
-                StatType.MaxMental => maxMental,
                 StatType.Damage => damage,
-                StatType.AttackSpeed => attackSpeed,
-                StatType.Strength => strength,
-                StatType.JumpRange => jumpRange,
-                StatType.FlightDuration => flightDuration,
-                StatType.StaminaRegenRate => staminaRegenRate,
-                StatType.StaminaRegenDelay => staminaRegenDelay,
-                StatType.StaminaRegenInterval => staminaRegenInterval,
-                StatType.HealthRegenRate => healthRegenRate,
-                StatType.HealthRegenDelay => healthRegenDelay,
-                StatType.HealthRegenInterval => healthRegenInterval,
-                StatType.MaxHitCount => maxHitCount,
-                StatType.InvincibilityDuration => invincibilityDuration,
-                StatType.SweepDuration => sweepDuration,
-                StatType.KnockbackForce => knockbackForce,
-                StatType.KnockbackResistance => knockbackResistance,
                 _ => 0f
             };
         }
