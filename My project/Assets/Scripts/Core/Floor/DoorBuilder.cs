@@ -81,14 +81,88 @@ namespace HitWaves.Core.Floor
             Vector2 delta = roomB.WorldCenter - roomA.WorldCenter;
             bool horizontal = Mathf.Abs(delta.x) > Mathf.Abs(delta.y);
 
+            DoorData door;
             if (horizontal)
             {
-                return CalculateHorizontalDoor(roomA, roomB, rectA, rectB, delta.x > 0);
+                door = CalculateHorizontalDoor(roomA, roomB, rectA, rectB, delta.x > 0);
             }
             else
             {
-                return CalculateVerticalDoor(roomA, roomB, rectA, rectB, delta.y > 0);
+                door = CalculateVerticalDoor(roomA, roomB, rectA, rectB, delta.y > 0);
             }
+
+            // 겹침 부족으로 문이 생성 안 됐으면 강제로 포탈 문 생성
+            if (door == null)
+            {
+                door = CreateForcedDoor(roomA, roomB, rectA, rectB, delta, horizontal);
+            }
+
+            return door;
+        }
+
+        /// <summary>
+        /// 접촉면이 부족한 인접 방 쌍에 강제로 문을 생성한다 (포탈 방식).
+        /// 각 방의 가장 가까운 벽 가장자리에 문을 배치한다.
+        /// </summary>
+        private DoorData CreateForcedDoor(RoomData roomA, RoomData roomB,
+            Rect rectA, Rect rectB, Vector2 delta, bool horizontal)
+        {
+            float doorX, doorY;
+            WallSide sideA, sideB;
+
+            if (horizontal)
+            {
+                bool bIsRight = delta.x > 0;
+
+                // 양 방의 Y 범위 중 가장 가까운 Y 좌표를 문 위치로
+                float clampedY = Mathf.Clamp(
+                    roomB.WorldCenter.y,
+                    rectA.yMin + _doorWidth * 0.5f,
+                    rectA.yMax - _doorWidth * 0.5f);
+                doorY = clampedY;
+
+                if (bIsRight)
+                {
+                    doorX = (rectA.xMax + rectB.xMin) * 0.5f;
+                    sideA = WallSide.Right;
+                    sideB = WallSide.Left;
+                }
+                else
+                {
+                    doorX = (rectB.xMax + rectA.xMin) * 0.5f;
+                    sideA = WallSide.Left;
+                    sideB = WallSide.Right;
+                }
+            }
+            else
+            {
+                bool bIsAbove = delta.y > 0;
+
+                float clampedX = Mathf.Clamp(
+                    roomB.WorldCenter.x,
+                    rectA.xMin + _doorWidth * 0.5f,
+                    rectA.xMax - _doorWidth * 0.5f);
+                doorX = clampedX;
+
+                if (bIsAbove)
+                {
+                    doorY = (rectA.yMax + rectB.yMin) * 0.5f;
+                    sideA = WallSide.Top;
+                    sideB = WallSide.Bottom;
+                }
+                else
+                {
+                    doorY = (rectB.yMax + rectA.yMin) * 0.5f;
+                    sideA = WallSide.Bottom;
+                    sideB = WallSide.Top;
+                }
+            }
+
+            DebugLogger.Log(LOG_TAG,
+                $"#{roomA.Id} ↔ #{roomB.Id} 강제 포탈 문 생성 — pos: ({doorX:F1}, {doorY:F1})", this);
+
+            return new DoorData(roomA, roomB, new Vector2(doorX, doorY),
+                sideA, sideB, _doorWidth);
         }
 
         /// <summary>

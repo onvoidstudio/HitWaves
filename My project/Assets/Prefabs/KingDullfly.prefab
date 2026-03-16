@@ -357,6 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271b57f910960c041990427f0eb41677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Entity.AI.Boss.KingDullFlyBrain
+  _initialDelay: 1
   _actionDelay: 5
   _staminaCost: 20
   _chargeChance: 0.5
@@ -395,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4c1dc4ce4fee8246b04359e11aa5789, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Entity.AI.Boss.ChargeBehavior
-  _chargeSpeed: 15
+  _chargeSpeed: 5
   _chargeDistance: 3
   _chargeDamage: 50
   _hitRadius: 2
@@ -438,5 +439,5 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: -0.15, y: 0.6}
-  m_Size: {x: 2.7, y: 3}
+  m_Size: {x: 2.3, y: 2.8}
   m_Direction: 0
