@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using HitWaves.Core.Floor;
+using HitWaves.UI.Minimap;
 
 namespace HitWaves.Core.Game
 {
@@ -25,6 +26,9 @@ namespace HitWaves.Core.Game
 
         [Tooltip("방 전환 매니저")]
         [SerializeField] private RoomTransitionManager _roomTransitionManager;
+
+        [Tooltip("미니맵 컨트롤러")]
+        [SerializeField] private MinimapController _minimapController;
 
         [Header("플레이어")]
         [Tooltip("플레이어의 HealthHandler")]
@@ -92,6 +96,12 @@ namespace HitWaves.Core.Game
                 _roomTransitionManager.PlayerTransform,
                 _roomTransitionManager.TransitionTo,
                 _wallBuilder.WallThickness);
+
+            // 미니맵 생성
+            if (_minimapController != null)
+            {
+                _minimapController.BuildMinimap(_currentRooms);
+            }
 
             RoomData startRoom = FindStartRoom();
             if (startRoom != null)

@@ -8,10 +8,18 @@ namespace HitWaves.Core
     {
         private const string LOG_TAG = "ContactDamage";
 
+        [Header("접촉 데미지")]
+        [Tooltip("이 엔티티가 접촉 시 상대에게 주는 데미지 (Damage 스탯과 독립)")]
+        [Min(0f)]
+        [SerializeField] private float _contactDamage = 1f;
+
         [Header("무적 설정")]
         [Tooltip("피격 후 무적 시간 (초)")]
         [Min(0f)]
         [SerializeField] private float _invincibilityDuration = 0.5f;
+
+        public float ContactDamageValue => _contactDamage;
+        public float InvincibilityDuration => _invincibilityDuration;
 
         private StatHandler _statHandler;
         private HealthHandler _healthHandler;
@@ -34,7 +42,8 @@ namespace HitWaves.Core
         }
 
         /// <summary>
-        /// 다른 진영의 엔티티와 접촉 시, 상대의 Damage 스탯만큼 자신이 피해를 받는다.
+        /// 다른 진영의 엔티티와 접촉 시, 상대의 접촉 데미지만큼 자신이 피해를 받는다.
+        /// 접촉 데미지는 상대의 ContactDamage._contactDamage 값 (Damage 스탯과 독립).
         /// 무적 시간 내에는 피해를 받지 않는다.
         /// </summary>
         private void HandleContact(GameObject other)
@@ -47,15 +56,22 @@ namespace HitWaves.Core
 
             if (otherStats.Faction == _statHandler.Faction) return;
 
-            float damage = otherStats.GetStat(StatType.Damage);
+            ContactDamage otherContact = other.GetComponent<ContactDamage>();
+            if (otherContact == null) return;
+
+            float damage = otherContact.ContactDamageValue;
             if (damage <= 0f) return;
 
-            _healthHandler.TakeDamage(damage);
-            _lastDamageTime = Time.time;
+            bool damageApplied = _healthHandler.TakeDamage(damage);
 
-            DebugLogger.Log(LOG_TAG,
-                $"{gameObject.name}: {other.name}({otherStats.Faction})과 접촉 — " +
-                $"{damage} 데미지 수신", this);
+            if (damageApplied)
+            {
+                _lastDamageTime = Time.time;
+
+                DebugLogger.Log(LOG_TAG,
+                    $"{gameObject.name}: {other.name}({otherStats.Faction})과 접촉 — " +
+                    $"{damage} 접촉 데미지 수신", this);
+            }
         }
     }
 }

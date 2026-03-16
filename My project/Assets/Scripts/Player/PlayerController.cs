@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using HitWaves.Core;
+using HitWaves.Core.Attack;
 
 namespace HitWaves.Entity.Player
 {
@@ -12,6 +13,9 @@ namespace HitWaves.Entity.Player
         [Tooltip("Player > Move 액션 참조 (WASD / 좌스틱)")]
         [SerializeField] private InputActionReference _moveAction;
 
+        [Tooltip("Player > Attack 액션 참조 (방향키 / 우스틱)")]
+        [SerializeField] private InputActionReference _attackAction;
+
         [Header("Movement Feel")]
         [Tooltip("가속 계수 — 높을수록 빠르게 최고 속도 도달")]
         [Min(0f)]
@@ -22,10 +26,15 @@ namespace HitWaves.Entity.Player
         [SerializeField] private float _deceleration = 10f;
 
         private Vector2 _moveInput;
+        private Vector2 _attackInput;
+        private AttackHandler _attackHandler;
+        private bool _inputEnabled = true;
 
         protected override void Awake()
         {
             base.Awake();
+
+            _attackHandler = GetComponent<AttackHandler>();
 
             DebugLogger.Log(LOG_TAG,
                 $"초기화 완료 — MoveSpeed: {_statHandler.GetStat(StatType.MoveSpeed)}, " +
@@ -43,6 +52,16 @@ namespace HitWaves.Entity.Player
             {
                 DebugLogger.LogWarning(LOG_TAG, "Move 액션이 할당되지 않음", this);
             }
+
+            if (_attackAction != null && _attackAction.action != null)
+            {
+                _attackAction.action.Enable();
+                DebugLogger.Log(LOG_TAG, "Attack 액션 활성화", this);
+            }
+            else
+            {
+                DebugLogger.LogWarning(LOG_TAG, "Attack 액션이 할당되지 않음", this);
+            }
         }
 
         private void OnDisable()
@@ -52,11 +71,34 @@ namespace HitWaves.Entity.Player
                 _moveAction.action.Disable();
                 DebugLogger.Log(LOG_TAG, "Move 액션 비활성화", this);
             }
+
+            if (_attackAction != null && _attackAction.action != null)
+            {
+                _attackAction.action.Disable();
+                DebugLogger.Log(LOG_TAG, "Attack 액션 비활성화", this);
+            }
+        }
+
+        /// <summary>
+        /// 입력 활성/비활성. 인트로 연출 등에서 사용.
+        /// </summary>
+        public void SetInputEnabled(bool enabled)
+        {
+            _inputEnabled = enabled;
+
+            if (!enabled)
+            {
+                _moveInput = Vector2.zero;
+                _attackInput = Vector2.zero;
+            }
         }
 
         private void Update()
         {
+            if (!_inputEnabled) return;
+
             ReadMoveInput();
+            ReadAttackInput();
         }
 
         private void FixedUpdate()
@@ -69,6 +111,18 @@ namespace HitWaves.Entity.Player
             if (_moveAction == null || _moveAction.action == null) return;
 
             _moveInput = _moveAction.action.ReadValue<Vector2>();
+        }
+
+        private void ReadAttackInput()
+        {
+            if (_attackAction == null || _attackAction.action == null) return;
+
+            _attackInput = _attackAction.action.ReadValue<Vector2>();
+
+            if (_attackInput.sqrMagnitude > 0.01f && _attackHandler != null)
+            {
+                _attackHandler.Attack(_attackInput);
+            }
         }
 
         private void Move()

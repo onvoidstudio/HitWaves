@@ -23,5 +23,7 @@ MonoBehaviour:
     Count: {x: 1, y: 1}
   - Label: 0
     Count: {x: 5, y: 8}
+  _bossPool:
+  - {fileID: 11400000, guid: 0118bf828ed490b4ea1469c48d93d7da, type: 2}
   _roomGap: 1
   _maxPlacementAttempts: 50

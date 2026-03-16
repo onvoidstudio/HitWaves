@@ -16,7 +16,9 @@ namespace HitWaves.Core.Floor
         public RoomLabel Label { get; }
         public int MinEnemyCount { get; }
         public int MaxEnemyCount { get; }
+        public BossData BossData { get; }
         public bool IsCleared { get; set; }
+        public bool IsVisited { get; set; }
         public IReadOnlyList<RoomData> Neighbors => _neighbors;
 
         public Rect WorldRect => new Rect(
@@ -26,7 +28,8 @@ namespace HitWaves.Core.Floor
             Height);
 
         public RoomData(int id, Vector2 worldCenter, float width, float height,
-            RoomLabel label, int minEnemyCount = 0, int maxEnemyCount = 0)
+            RoomLabel label, int minEnemyCount = 0, int maxEnemyCount = 0,
+            BossData bossData = null)
         {
             Id = id;
             WorldCenter = worldCenter;
@@ -35,11 +38,13 @@ namespace HitWaves.Core.Floor
             Label = label;
             MinEnemyCount = minEnemyCount;
             MaxEnemyCount = maxEnemyCount;
+            BossData = bossData;
             IsCleared = false;
 
             DebugLogger.Log(LOG_TAG,
                 $"생성 — id: {id}, center: {worldCenter}, size: {width}x{height}, " +
-                $"label: {label}, enemies: {minEnemyCount}~{maxEnemyCount}", null);
+                $"label: {label}, enemies: {minEnemyCount}~{maxEnemyCount}" +
+                (bossData != null ? $", boss: {bossData.DisplayName}" : ""), null);
         }
 
         /// <summary>

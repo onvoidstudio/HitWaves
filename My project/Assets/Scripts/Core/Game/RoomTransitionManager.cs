@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using HitWaves.Core.Floor;
+using HitWaves.Entity.Player;
+using HitWaves.UI;
 
 namespace HitWaves.Core.Game
 {
@@ -23,6 +25,12 @@ namespace HitWaves.Core.Game
         [Tooltip("문 생성기 (잠금/해제용)")]
         [SerializeField] private DoorBuilder _doorBuilder;
 
+        [Tooltip("바닥 렌더러 (방별 표시/숨김)")]
+        [SerializeField] private FloorRenderer _floorRenderer;
+
+        [Tooltip("보스 인트로 UI (없으면 연출 생략)")]
+        [SerializeField] private BossIntroUI _bossIntroUI;
+
         [Header("페이드 설정")]
         [Tooltip("페이드 인/아웃 각각의 시간 (초)")]
         [Min(0.01f)]
@@ -41,6 +49,8 @@ namespace HitWaves.Core.Game
         public RoomData CurrentRoom => _currentRoom;
 
         public event Action OnBossRoomCleared;
+        public event Action<RoomData> OnRoomEntered;
+        public event Action<RoomData> OnRoomCleared;
 
         private void Awake()
         {
@@ -72,6 +82,11 @@ namespace HitWaves.Core.Game
             _cameraController.SetTarget(_playerTransform);
             UpdateCameraBounds(room);
             _cameraController.SnapToTarget();
+
+            if (_floorRenderer != null)
+            {
+                _floorRenderer.ShowRoom(room.Id);
+            }
 
             EnterRoom(room);
 
@@ -114,11 +129,16 @@ namespace HitWaves.Core.Game
             // 페이드 아웃
             yield return FadeCoroutine(0f, 1f);
 
-            // 암전 중: 플레이어 텔레포트 + 카메라 전환
+            // 암전 중: 플레이어 텔레포트 + 카메라 전환 + 바닥 교체
             TeleportPlayerThroughDoor(door, targetRoom);
             _currentRoom = targetRoom;
             UpdateCameraBounds(targetRoom);
             _cameraController.SnapToTarget();
+
+            if (_floorRenderer != null)
+            {
+                _floorRenderer.ShowRoom(targetRoom.Id);
+            }
 
             // 페이드 인
             yield return FadeCoroutine(1f, 0f);
@@ -132,11 +152,14 @@ namespace HitWaves.Core.Game
         }
 
         /// <summary>
-        /// 방 입장 처리: 문 잠금 → 적 스폰.
+        /// 방 입장 처리: 방문 마킹 → 미니맵 갱신 → 문 잠금 → 적 스폰.
         /// 적 수 0이면 EnemySpawner가 즉시 클리어 이벤트를 발생시킨다.
         /// </summary>
         private void EnterRoom(RoomData room)
         {
+            room.IsVisited = true;
+            OnRoomEntered?.Invoke(room);
+
             if (room.IsCleared)
             {
                 DebugLogger.Log(LOG_TAG,
@@ -149,10 +172,58 @@ namespace HitWaves.Core.Game
                 _doorBuilder.LockDoorsForRoom(room);
             }
 
+            // 보스방: 인트로 UI 표시 후 스폰
+            if (room.Label == RoomLabel.Boss && room.BossData != null
+                && _bossIntroUI != null)
+            {
+                StartCoroutine(BossIntroThenSpawn(room));
+                return;
+            }
+
             if (_enemySpawner != null)
             {
                 _enemySpawner.SpawnForRoom(room, _playerTransform);
             }
+        }
+
+        /// <summary>
+        /// 보스 인트로 연출 후 스폰하는 코루틴.
+        /// </summary>
+        private IEnumerator BossIntroThenSpawn(RoomData room)
+        {
+            // 인트로 중 플레이어 입력 차단
+            PlayerController playerController = _playerTransform != null
+                ? _playerTransform.GetComponent<PlayerController>()
+                : null;
+            playerController?.SetInputEnabled(false);
+
+            bool introFinished = false;
+
+            void HandleIntroFinished()
+            {
+                introFinished = true;
+            }
+
+            _bossIntroUI.OnIntroFinished += HandleIntroFinished;
+            _bossIntroUI.Show(room.BossData.DisplayName, room.BossData.Title);
+
+            while (!introFinished)
+            {
+                yield return null;
+            }
+
+            _bossIntroUI.OnIntroFinished -= HandleIntroFinished;
+
+            // 인트로 종료 → 입력 복원 + 보스 스폰
+            playerController?.SetInputEnabled(true);
+
+            if (_enemySpawner != null)
+            {
+                _enemySpawner.SpawnForRoom(room, _playerTransform);
+            }
+
+            DebugLogger.Log(LOG_TAG,
+                $"BossIntroThenSpawn — 인트로 완료, 보스 스폰: {room.BossData.DisplayName}", this);
         }
 
         /// <summary>
@@ -168,6 +239,8 @@ namespace HitWaves.Core.Game
             {
                 _doorBuilder.UnlockDoorsForRoom(_currentRoom);
             }
+
+            OnRoomCleared?.Invoke(_currentRoom);
 
             DebugLogger.Log(LOG_TAG,
                 $"HandleRoomCleared — 방 #{_currentRoom.Id} 클리어, 문 해제", this);

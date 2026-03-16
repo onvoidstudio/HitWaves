@@ -26,6 +26,10 @@ namespace HitWaves.Core.Floor
         [Tooltip("각 라벨별 생성 개수 범위")]
         [SerializeField] private RoomCountEntry[] _roomCountSettings;
 
+        [Header("보스 풀")]
+        [Tooltip("이 테마에서 등장 가능한 보스 목록 (랜덤 선택)")]
+        [SerializeField] private BossData[] _bossPool;
+
         [Header("배치")]
         [Tooltip("방 사이 간격 (월드 유닛). 나중에 벽/문이 들어갈 공간")]
         [Min(0f)]
@@ -37,6 +41,7 @@ namespace HitWaves.Core.Floor
 
         public RoomConfig[] RoomConfigs => _roomConfigs;
         public RoomCountEntry[] RoomCountSettings => _roomCountSettings;
+        public BossData[] BossPool => _bossPool;
         public float RoomGap => _roomGap;
         public int MaxPlacementAttempts => _maxPlacementAttempts;
 
@@ -129,6 +134,24 @@ namespace HitWaves.Core.Floor
             }
 
             return configs[configs.Length - 1];
+        }
+
+        /// <summary>
+        /// 보스 풀에서 랜덤으로 BossData 하나를 선택한다.
+        /// 풀이 비어있으면 null 반환.
+        /// </summary>
+        public BossData GetRandomBoss(System.Random rng)
+        {
+            if (_bossPool == null || _bossPool.Length == 0)
+            {
+                Debug.LogWarning($"[{LOG_TAG}] GetRandomBoss: 보스 풀이 비어있음");
+                return null;
+            }
+
+            int index = rng.Next(0, _bossPool.Length);
+            DebugLogger.Log(LOG_TAG,
+                $"GetRandomBoss → {_bossPool[index].DisplayName} ({index}/{_bossPool.Length})", null);
+            return _bossPool[index];
         }
     }
 }

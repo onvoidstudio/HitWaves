@@ -14,4 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.EntityStatData
   moveSpeed: 5
   maxHealth: 9999
-  damage: 100
+  damage: 9999
+  maxStamina: 9999
+  staminaRegenRate: 10
+  staminaRegenDelay: 1
+  staminaRegenInterval: 0.2
+  attackSpeed: 10
+  knockbackForce: 5
+  knockbackResistance: 0
+  toughness: 5
+  defense: 0

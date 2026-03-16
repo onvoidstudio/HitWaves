@@ -137,24 +137,16 @@ namespace HitWaves.Core
 
         /// <summary>
         /// 방 크기에 따라 카메라 구역을 계산한다.
-        /// 가로에 맞춰 줌 → 방이 화면 폭을 꽉 채움.
-        /// 세로가 뷰포트를 넘으면 구역 분할로 처리.
+        /// orthographic size는 항상 고정 — 방이 화면보다 크면 구역 분할로 처리.
         /// </summary>
         public void SetRoomBounds(Vector2 center, Vector2 halfSize)
         {
             _hasBounds = true;
             Camera cam = Camera.main;
 
-            float paddedHalfW = halfSize.x + _roomPadding;
-            float paddedHalfH = halfSize.y + _roomPadding;
+            cam.orthographicSize = _baseOrthoSize;
 
-            float fitOrthoW = paddedHalfW / cam.aspect;
-            float fitOrthoH = paddedHalfH;
-            float fitOrthoSize = Mathf.Min(fitOrthoW, fitOrthoH);
-            float newOrthoSize = Mathf.Min(fitOrthoSize, _baseOrthoSize);
-            cam.orthographicSize = newOrthoSize;
-
-            float camHH = newOrthoSize;
+            float camHH = _baseOrthoSize;
             float camHW = camHH * cam.aspect;
 
             float effectiveMinX = center.x - halfSize.x - _roomPadding;
@@ -169,7 +161,7 @@ namespace HitWaves.Core
 
             DebugLogger.Log(LOG_TAG,
                 $"SetRoomBounds — center: {center}, halfSize: {halfSize}, " +
-                $"orthoSize: {newOrthoSize:F2} (base: {_baseOrthoSize}), " +
+                $"orthoSize: {_baseOrthoSize:F2}, " +
                 $"zones: ({zonesX}x{zonesY}), " +
                 $"camHalf: ({camHW:F2}, {camHH:F2})", this);
         }

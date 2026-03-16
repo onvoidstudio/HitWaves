@@ -168,6 +168,7 @@ MonoBehaviour:
   _wallBuilder: {fileID: 872168654}
   _doorBuilder: {fileID: 548901986}
   _roomTransitionManager: {fileID: 1940666175}
+  _minimapController: {fileID: 618143082}
   _playerHealth: {fileID: 313530383}
   _deathRestartDelay: 1.5
   _bossRestartDelay: 2
@@ -215,9 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463c6211202888c4ea832e1bf012a63b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Dungeon.FloorRenderer
-  _startColor: {r: 0.3, g: 0.8, b: 0.3, a: 1}
-  _normalColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  _bossColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  _floorTexture: {fileID: 2800000, guid: b7cc096dd291e5e4eb49075101db87cd, type: 3}
+  _sliceSize: 256
   _sortingLayerName: Default
   _orderInLayer: -10
 --- !u!1 &313530377
@@ -236,6 +236,8 @@ GameObject:
   - component: {fileID: 313530383}
   - component: {fileID: 313530384}
   - component: {fileID: 313530385}
+  - component: {fileID: 313530386}
+  - component: {fileID: 313530387}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -323,6 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _acceleration: 20
   _deceleration: 10
 --- !u!50 &313530382
@@ -376,6 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61cf598cc2c1d6439e4cb7ad07be4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.ContactDamage
+  _contactDamage: 2
   _invincibilityDuration: 1
 --- !u!114 &313530385
 MonoBehaviour:
@@ -390,9 +394,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.HitEffect
   _mode: 0
-  _blinkCount: 3
   _blinkInterval: 0.1
   _flashDuration: 0.08
+  _flashCount: 2
+  _flashInterval: 0.06
+--- !u!114 &313530386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313530377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e542e4db55e5b049ae74c4a9d2d24cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Attack.AttackHandler
+  _range: 1
+  _swingAngle: 60
+  _damageCoefficient: 0.3
+  _maxHitCount: 1
+  _staminaCost: 10
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  _effectDuration: 0.1
+--- !u!114 &313530387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313530377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b021255a95f097448b724a25e72803b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.StaminaHandler
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,8 +468,8 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -549,7 +587,7 @@ MonoBehaviour:
   _speedMultiplier: 5
   _minSpeed: 2
   _microFollowRatio: 0.5
-  _baseOrthoSize: 7
+  _baseOrthoSize: 3.5
   _roomPadding: 1
 --- !u!1 &392386318
 GameObject:
@@ -818,6 +856,56 @@ MonoBehaviour:
   _roomGap: 1
   _blockerColor: {r: 0.6, g: 0.1, b: 0.1, a: 1}
   _showBlockerVisuals: 1
+--- !u!1 &618143080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 618143081}
+  - component: {fileID: 618143082}
+  m_Layer: 0
+  m_Name: MinimapController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &618143081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618143080}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 859907622}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &618143082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618143080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 184de8dd20eba0849bfb92759d5b5bfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.UI.Minimap.MinimapController
+  _roomTransitionManager: {fileID: 1940666175}
+  _panelSize: {x: 200, y: 200}
+  _panelMargin: {x: 20, y: 20}
+  _unknownIconSize: 10
+  _backgroundColor: {r: 0, g: 0, b: 0, a: 0.5}
+  _paddingRatio: 0.1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,6 +991,7 @@ Transform:
   - {fileID: 548901985}
   - {fileID: 1940666174}
   - {fileID: 985033769}
+  - {fileID: 618143081}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &872168652
@@ -996,7 +1085,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34ac8f08c92f19749a4e83d51e16fd8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Game.EnemySpawner
-  _enemyPrefab: {fileID: 7891543651500361648, guid: 7c7a68717169b1847a9e676e3ef9048c, type: 3}
+  _spawnPool:
+  - Prefab: {fileID: 5063452224519020770, guid: 7d03ba7cee97d5a499fcb2c08744d54d, type: 3}
+    Weight: 7
+    MaxPerRoom: 20
   _wallMargin: 2
   _playerMinDistance: 3
   _maxPlacementAttempts: 30
@@ -1173,6 +1265,7 @@ MonoBehaviour:
   _playerTransform: {fileID: 313530378}
   _enemySpawner: {fileID: 985033770}
   _doorBuilder: {fileID: 548901986}
+  _floorRenderer: {fileID: 157744055}
   _fadeDuration: 0.2
   _teleportOffset: 2
 --- !u!1660057539 &9223372036854775807

@@ -34,18 +34,34 @@ namespace HitWaves.Core
         }
 
         /// <summary>
-        /// 데미지를 받는다. 이미 사망 상태면 무시.
+        /// 데미지를 받는다. 견고함+방어력 합산 이상이어야 실제 피해 발생.
+        /// 무효화 시 false 반환 (히트 이펙트, 넉백 등 적용하지 않음).
         /// </summary>
-        public void TakeDamage(float amount)
+        public bool TakeDamage(float amount)
         {
-            if (_isDead) return;
-            if (amount <= 0f) return;
+            if (_isDead) return false;
+            if (amount <= 0f) return false;
 
-            _currentHealth -= amount;
+            float toughness = _statHandler.GetStat(StatType.Toughness);
+            float defense = _statHandler.GetStat(StatType.Defense);
+            float totalProtection = toughness + defense;
+
+            if (amount <= totalProtection)
+            {
+                DebugLogger.Log(LOG_TAG,
+                    $"{gameObject.name}: 데미지 무효화 — " +
+                    $"damage:{amount} <= protection:{totalProtection} " +
+                    $"(toughness:{toughness} + defense:{defense})", this);
+                return false;
+            }
+
+            float finalDamage = amount - totalProtection;
+            _currentHealth -= finalDamage;
             _currentHealth = Mathf.Max(_currentHealth, 0f);
 
             DebugLogger.Log(LOG_TAG,
-                $"{gameObject.name}: 피격 — {amount} 데미지, " +
+                $"{gameObject.name}: 피격 — {finalDamage} 데미지 " +
+                $"(원본:{amount} - 보호:{totalProtection}), " +
                 $"남은 체력: {_currentHealth}/{MaxHealth}", this);
 
             OnDamaged?.Invoke();
@@ -55,6 +71,8 @@ namespace HitWaves.Core
             {
                 Die();
             }
+
+            return true;
         }
 
         private void Die()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: basic
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.Dungeon.RoomConfig
   _label: 0
-  _minWidth: 12
+  _minWidth: 4
   _maxWidth: 16
   _minHeight: 10
   _maxHeight: 14

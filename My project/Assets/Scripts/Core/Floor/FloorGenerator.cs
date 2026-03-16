@@ -115,8 +115,10 @@ namespace HitWaves.Core.Floor
 
                 RoomConfig picked = _config.PickRandomConfig(configs, _rng);
                 Vector2 size = picked.GetRandomSize(_rng);
+
+                BossData bossData = _config.GetRandomBoss(_rng);
                 PlaceRoomNextTo(size.x, size.y, RoomLabel.Boss, farthest,
-                    picked.MinEnemyCount, picked.MaxEnemyCount);
+                    picked.MinEnemyCount, picked.MaxEnemyCount, bossData);
             }
         }
 
@@ -174,7 +176,7 @@ namespace HitWaves.Core.Floor
         /// 일반 PlaceRoom과 다르게 anchor가 고정되어 있다.
         /// </summary>
         private void PlaceRoomNextTo(float width, float height, RoomLabel label, RoomData target,
-            int minEnemyCount, int maxEnemyCount)
+            int minEnemyCount, int maxEnemyCount, BossData bossData = null)
         {
             int id = _nextRoomId++;
             float gap = _config.RoomGap;
@@ -193,7 +195,7 @@ namespace HitWaves.Core.Floor
                 if (!OverlapsAny(candidate, gap))
                 {
                     RoomData room = new RoomData(id, center, width, height, label,
-                        minEnemyCount, maxEnemyCount);
+                        minEnemyCount, maxEnemyCount, bossData);
                     room.AddNeighbor(target);
                     _rooms.Add(room);
                     DebugLogger.Log(LOG_TAG,

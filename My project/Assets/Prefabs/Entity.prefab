@@ -102,11 +102,12 @@ GameObject:
   - component: {fileID: 5908423175369924847}
   - component: {fileID: 2954339789408335946}
   - component: {fileID: 2006514199672668868}
-  - component: {fileID: 5408596455876177617}
   - component: {fileID: 5402127912437813071}
   - component: {fileID: 455599394270923039}
   - component: {fileID: 4960319364395162278}
   - component: {fileID: 8899959857777923233}
+  - component: {fileID: 160345765226253276}
+  - component: {fileID: -5308212940076093174}
   m_Layer: 0
   m_Name: Entity
   m_TagString: Entity
@@ -171,18 +172,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.StatHandler
   _baseStats: {fileID: 11400000, guid: 3b1830ee66e39a140a29ac3cc077c1b0, type: 2}
   _faction: 1
---- !u!114 &5408596455876177617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7891543651500361648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fd0ad4fd8eacd74d9b993dc92abbfb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Entity.Enemy.EnemyController
 --- !u!70 &5402127912437813071
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -244,6 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61cf598cc2c1d6439e4cb7ad07be4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.ContactDamage
+  _contactDamage: 11
   _invincibilityDuration: 0.5
 --- !u!114 &8899959857777923233
 MonoBehaviour:
@@ -261,3 +251,28 @@ MonoBehaviour:
   _blinkCount: 3
   _blinkInterval: 0.1
   _flashDuration: 0.08
+--- !u!114 &160345765226253276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891543651500361648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61daeb7b9ac2124886b5e59d4626135, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Entity.AI.EntityBrain
+--- !u!114 &-5308212940076093174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891543651500361648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394a308be8dc69c4eabc37858c7dbaaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Entity.AI.MoveBehaviors.ChaseBehavior
+  _chaseSpeedRatio: 1
