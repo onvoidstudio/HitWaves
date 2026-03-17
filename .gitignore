@@ -44,8 +44,9 @@ _Recovery/
 **/Assets/_Recovery.meta
 nul
 
-# ===== Large Files =====
+# ===== Large Files / Source Art =====
 *.psd
+*.clip
 
 # ===== OS =====
 .DS_Store
