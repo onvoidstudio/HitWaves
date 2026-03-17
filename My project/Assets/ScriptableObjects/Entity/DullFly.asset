@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37cced1d95ef72c479569c4b316bd64c, type: 3}
   m_Name: DullFly
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.EntityStatData
-  moveSpeed: 1
-  maxHealth: 10
-  damage: 100
+  moveSpeed: 2
+  maxHealth: 5
+  damage: 10
   maxStamina: 100
   staminaRegenRate: 10
   staminaRegenDelay: 1
   staminaRegenInterval: 0.2
   attackSpeed: 2
-  knockbackForce: 5
+  knockbackForce: 1
   knockbackResistance: 0
-  toughness: 1
+  toughness: 0
   defense: 0

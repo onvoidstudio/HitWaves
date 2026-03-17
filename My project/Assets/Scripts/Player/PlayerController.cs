@@ -16,6 +16,9 @@ namespace HitWaves.Entity.Player
         [Tooltip("Player > Attack 액션 참조 (방향키 / 우스틱)")]
         [SerializeField] private InputActionReference _attackAction;
 
+        [Tooltip("Player > SwapHand 액션 참조 (F키)")]
+        [SerializeField] private InputActionReference _swapHandAction;
+
         [Header("Movement Feel")]
         [Tooltip("가속 계수 — 높을수록 빠르게 최고 속도 도달")]
         [Min(0f)]
@@ -28,6 +31,7 @@ namespace HitWaves.Entity.Player
         private Vector2 _moveInput;
         private Vector2 _attackInput;
         private AttackHandler _attackHandler;
+        private Inventory _inventory;
         private bool _inputEnabled = true;
 
         protected override void Awake()
@@ -35,6 +39,7 @@ namespace HitWaves.Entity.Player
             base.Awake();
 
             _attackHandler = GetComponent<AttackHandler>();
+            _inventory = GetComponent<Inventory>();
 
             DebugLogger.Log(LOG_TAG,
                 $"초기화 완료 — MoveSpeed: {_statHandler.GetStat(StatType.MoveSpeed)}, " +
@@ -62,6 +67,12 @@ namespace HitWaves.Entity.Player
             {
                 DebugLogger.LogWarning(LOG_TAG, "Attack 액션이 할당되지 않음", this);
             }
+
+            if (_swapHandAction != null && _swapHandAction.action != null)
+            {
+                _swapHandAction.action.Enable();
+                _swapHandAction.action.performed += OnSwapHandPerformed;
+            }
         }
 
         private void OnDisable()
@@ -77,6 +88,11 @@ namespace HitWaves.Entity.Player
                 _attackAction.action.Disable();
                 DebugLogger.Log(LOG_TAG, "Attack 액션 비활성화", this);
             }
+
+            if (_swapHandAction != null && _swapHandAction.action != null)
+            {
+                _swapHandAction.action.performed -= OnSwapHandPerformed;
+            }
         }
 
         /// <summary>
@@ -91,6 +107,15 @@ namespace HitWaves.Entity.Player
                 _moveInput = Vector2.zero;
                 _attackInput = Vector2.zero;
             }
+        }
+
+        private void OnSwapHandPerformed(InputAction.CallbackContext ctx)
+        {
+            if (!_inputEnabled) return;
+            if (_inventory == null) return;
+
+            _inventory.SwapSlots(0, 1);
+            DebugLogger.Log(LOG_TAG, "양손 아이템 교환 (F키)", this);
         }
 
         private void Update()

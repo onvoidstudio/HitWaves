@@ -4,6 +4,7 @@ namespace HitWaves.Core
     {
         Player,
         Enemy,
-        Neutral
+        Neutral,
+        Object
     }
 }

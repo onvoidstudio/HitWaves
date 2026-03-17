@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37cced1d95ef72c479569c4b316bd64c, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::HitWaves.Core.EntityStatData
-  moveSpeed: 5
-  maxHealth: 9999
-  damage: 9999
-  maxStamina: 9999
+  moveSpeed: 1
+  maxHealth: 100
+  damage: 10
+  maxStamina: 100
   staminaRegenRate: 10
   staminaRegenDelay: 1
   staminaRegenInterval: 0.2
-  attackSpeed: 10
+  attackSpeed: 1
   knockbackForce: 5
   knockbackResistance: 0
   toughness: 5

@@ -15,8 +15,12 @@ namespace HitWaves.Core.Floor
         [Tooltip("보스 칭호 (예: 둔한 파리의 왕)")]
         [SerializeField] private string _title;
 
+        [Tooltip("보스 인트로 연출용 이미지")]
+        [SerializeField] private Sprite _introSprite;
+
         public GameObject Prefab => _prefab;
         public string DisplayName => _displayName;
         public string Title => _title;
+        public Sprite IntroSprite => _introSprite;
     }
 }

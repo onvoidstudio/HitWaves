@@ -205,7 +205,8 @@ namespace HitWaves.Core.Game
             }
 
             _bossIntroUI.OnIntroFinished += HandleIntroFinished;
-            _bossIntroUI.Show(room.BossData.DisplayName, room.BossData.Title);
+            _bossIntroUI.Show(room.BossData.DisplayName, room.BossData.Title,
+                room.BossData.IntroSprite);
 
             while (!introFinished)
             {

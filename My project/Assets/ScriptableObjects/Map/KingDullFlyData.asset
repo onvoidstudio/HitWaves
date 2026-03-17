@@ -15,3 +15,4 @@ MonoBehaviour:
   _prefab: {fileID: 2422257063579028652, guid: c5dd86d35c051e74eb2dc8257d1b52d0, type: 3}
   _displayName: KingDullFly
   _title: 'The King of dull fly '
+  _introSprite: {fileID: 21300000, guid: 66e1f3165e4bd1e46b6ee372f3bb1067, type: 3}
